@@ -1,0 +1,22 @@
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 1, reused 1, downloaded 0, added 0
+Progress: resolved 3, reused 2, downloaded 0, added 0
+Progress: resolved 6, reused 5, downloaded 0, added 0
+Progress: resolved 6, reused 6, downloaded 0, added 0
+Progress: resolved 7, reused 6, downloaded 0, added 0
+Progress: resolved 9, reused 8, downloaded 0, added 0
+Progress: resolved 9, reused 9, downloaded 0, added 0
+Progress: resolved 11, reused 10, downloaded 0, added 0
+Progress: resolved 15, reused 14, downloaded 0, added 0
+Progress: resolved 15, reused 15, downloaded 0, added 0
+Progress: resolved 16, reused 15, downloaded 0, added 0
+Progress: resolved 17, reused 16, downloaded 0, added 0
+Progress: resolved 21, reused 20, downloaded 0, added 0
+ ERR_PNPM_FETCH_404  GET https://registry.npmjs.org/@types%2Fbrcypt: Not Found - 404
+
+This error happened while installing a direct dependency of C:\Users\HP\Documents\vs_code_files\backend-projects\gr-tech-backend
+
+@types/brcypt is not in the npm registry, or you have no permission to fetch it.
+
+No authorization header was set for the request.
+Progress: resolved 22, reused 21, downloaded 1, added 0

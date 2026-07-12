@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+
+model User{
+  id              String        @id @default(uuid())
+  name            String
+  email           String        @unique
+  password        String
+  phoneNumber     String?        
+  createdAt       DateTime      @default(now())
+  cartItems       CartItem[]        
+  order           Order[]  
+  updatedAt       DateTime      @default(now()) @updatedAt
+
+  @@map("users")
+}
+
+
+
+model CartItem{
+  id              Int           @id @default(autoincrement())
+  productName     String?        
+  quantity        Int
+  productId       String
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
+  @@unique([userId, productId])
+  @@index([userId])
+}
+
+model Product{
+  id              String              @id @default(uuid())
+  imageUrl        String              @default("")
+  images          String[]
+  name            String        
+  description     String        
+  category        productCategory     @default(SOLARPANEL)
+  price           Int
+  stock           Int
+  ratings         Int[]
+  variant         String
+  features        String[]
+}
+
+model Order {
+  id              String         @id @default(uuid())
+  userId          String         
+  user            User           @relation(fields: [userId], references: [id])
+  
+  // Financial Tracking (Store prices as Integers in kobo/cents to avoid floating-point issues)
+  totalAmount     Int?            
+  shippingFee     Int?            @default(0)
+  tax             Int?            @default(0)
+  
+  // Statuses
+  status          OrderStatus    @default(PENDING)
+  paymentStatus   PaymentStatus  @default(UNPAID)
+  paymentReference String?       @unique // For Paystack, Flutterwave, etc.
+  
+  // Delivery details snapshot
+  shippingAddress String
+  phoneNumber     String
+  email           String
+  
+  // Relations
+  items           OrderItem[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  // 💡 CRITICAL: Reference the product, but duplicate the static details!
+  productId   String
+  productName String   // Snapshot of the name at checkout
+  price       Int      // Snapshot of the price at checkout (prevents old order totals changing)
+  quantity    Int
+
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+  FAILED
+}
+
+enum productCategory{
+  SOLARPANEL
+  INVERTER
+  BATTERY
+  ACCESSORY
+}
