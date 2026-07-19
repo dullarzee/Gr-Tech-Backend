@@ -55,6 +55,7 @@ model Product{
   ratings         Int[]
   variant         String
   features        String[]
+  created_at      DateTime            @default(now())
 }
 
 model Order {
@@ -63,7 +64,7 @@ model Order {
   user            User           @relation(fields: [userId], references: [id])
   
   // Financial Tracking (Store prices as Integers in kobo/cents to avoid floating-point issues)
-  totalAmount     Int?            
+  totalAmount     Int           
   shippingFee     Int?            @default(0)
   tax             Int?            @default(0)
   

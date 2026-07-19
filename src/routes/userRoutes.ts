@@ -20,8 +20,25 @@ const createJwtToken = (id: any) => {
   return jwt.sign({ id }, jwt_secret, { expiresIn: max_age_in_seconds });
 };
 
+router.get("/users", async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.user.findMany({
+      include: {
+        order: true,
+      },
+    });
+    if (!users) throw new Error("Server error: COuldn't fetch users");
+
+    res.status(200).json({ ok: true, data: users, message: "Success" });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: err instanceof Error && err.message, ok: false });
+  }
+});
+
 router.post("/register", async (req: Request, res: Response) => {
-  const { email, password, name, phone } = req.body;
+  const { email, password, name, phoneNumber } = req.body;
   if (!(email && password && name)) {
     return res.status(400).json({
       message: "Email, password and name must be provided",
@@ -38,7 +55,7 @@ router.post("/register", async (req: Request, res: Response) => {
         email,
         password: hashedPassword,
         name,
-        phoneNumber: phone || null,
+        phoneNumber: phoneNumber || null,
       },
     });
     if (!user) throw Error("User unable to be created");
@@ -123,9 +140,25 @@ router.get("/logout", async (_: Request, res: Response) => {
   return res.status(200).json({ message: "Signed out successfully", ok: true });
 });
 
-router.get("/getAllUsers", async (req: Request, res: Response) => {
-  const users = await prisma.user.findMany();
-  return res.status(200).json(users);
+router.delete("/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!id)
+    return res
+      .status(400)
+      .json({ ok: false, message: "Please include 'Id' in query params" });
+
+  try {
+    const deletedUser = await prisma.user.delete({
+      where: {
+        id: id as string,
+      },
+    });
+    if (!deletedUser) throw new Error("User couldn't be deleted");
+
+    res.status(200).json({ ok: true, message: "User deleted" });
+  } catch (err) {
+    res.status(500).json({ ok: false, message: "failed to delete user" });
+  }
 });
 
 export default router;
