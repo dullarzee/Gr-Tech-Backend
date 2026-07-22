@@ -8,7 +8,7 @@ import cartRoutes from "./routes/cartRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 
-const PORT = 8080;
+const PORT = process.env.PORT;
 
 const app = express();
 
