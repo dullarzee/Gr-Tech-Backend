@@ -1,5 +1,5 @@
 import { Router, type Request, type Response, CookieOptions } from "express";
-import prisma from "../prismaInit";
+import prisma from "../prismaInit.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
