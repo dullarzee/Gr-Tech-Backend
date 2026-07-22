@@ -50,6 +50,32 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/userOrders/:userId", async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  if (!userId) {
+    return res
+      .status(400)
+      .json({ message: "product id is not included", ok: false });
+  }
+
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: userId as string,
+      },
+      include: {
+        items: true,
+      },
+    });
+    return res
+      .status(200)
+      .json({ ok: true, message: "Successful", data: orders });
+  } catch (err) {
+    return res.status(500).json({ error: err, ok: false });
+  }
+});
+
 //  /api/orders/submitOrder
 //  submit order to DB for admin to view
 router.post("/submitOrder/:userId", async (req: Request, res: Response) => {
@@ -86,6 +112,7 @@ router.post("/submitOrder/:userId", async (req: Request, res: Response) => {
               productName: prod.name,
               quantity: prod.quantity,
               price: prod.price,
+              imageUrl: prod.imageUrl,
             })),
           },
         },

@@ -6,6 +6,7 @@ import productRoutes from "./routes/productRoutes.js";
 import { serverGuard } from "./middleware.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
 
 const PORT = 8080;
 
@@ -26,6 +27,7 @@ app.use("/api/auth", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/contact", contactRoutes);
 app.get("/", (req, res) => {
   return res
     .status(200)

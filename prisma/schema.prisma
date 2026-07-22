@@ -94,6 +94,7 @@ model OrderItem {
   // 💡 CRITICAL: Reference the product, but duplicate the static details!
   productId   String
   productName String   // Snapshot of the name at checkout
+  imageUrl    String
   price       Int      // Snapshot of the price at checkout (prevents old order totals changing)
   quantity    Int
 
